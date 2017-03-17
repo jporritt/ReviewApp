@@ -1,0 +1,118 @@
+<div *ngIf="revState=='view'">
+    <h2 class="sub-header">Reviews</h2><button class="btn btn-primary" (click)="changeRevState('new')">Add Review</button>
+    <div style='width:100%'>
+        <table class="table table-responsive table-striped">
+            <thead>
+                <tr>
+                    <th>Review Id</th>
+                    <th>Reviewee</th>
+                    <th>Reviewer</th>
+                    <th>Project Manager</th>
+                    <th>Project</th>
+                    <th>Communications</th>
+                    <th>Motivation & Initiative</th>
+                    <th>Teamwork</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let rev of reviews">
+                    <td>{{rev.$key}}</td>
+                    <td>{{getItemByKey(rev.revieweeId, emps, "empName")}}</td>
+                    <td>{{getItemByKey(rev.reviewerId, emps, "empName")}}</td>
+                    <td>{{getItemByKey(getItemByKey(rev.projectId, projects, "pmId"), emps, "empName")}}</td>
+                    <td>{{getItemByKey(rev.projectId, projects, "projectName")}}</td>
+                    <td>{{convertRating(rev.criteria[0].COMM)}}</td>
+                    <td>{{convertRating(rev.criteria[0].MI)}}</td>
+                    <td>{{convertRating(rev.criteria[0].TW)}}</td>
+                    <td><span class="glyphicon glyphicon-edit" title="Create Review"></span></td>
+                    <td><span class="glyphicon glyphicon-pencil" title="Edit Review" (click)="editReview(rev);"></span></td>
+
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+<div *ngIf="revState=='edit' || revState=='new'">
+    <form class="form-horizontal" role="form" #f="ngForm" (ngSubmit)="revState=='new'?addReview(f.form):updateReview(review.$key, f.form); f.form.reset();">
+        <legend class="righter">Review</legend>
+        <div class="form-group">
+            <label for="id" class="col-xs-2 control-label">Employee:</label>
+            <div class="col-xs-4">
+                <select id="revieweeId" [(ngModel)]="rev==null?revieweeId:rev.revieweeId" required class="form-control" name="revieweeId">
+                    <option value="x" selected>Select an Employee to Review</option>
+                    <option *ngFor="let e of emps" value="{{e.$key}}" >{{e.empName}}</option>
+                </select>
+
+            </div>
+            <label for="title" class="col-xs-2 control-label">Project:</label>
+            <div class="col-xs-4">
+                <select id="projectId" [(ngModel)]="rev==null?projectId:rev.projectId" required class="form-control" name="projectId">
+                    <option value="x" selected>Select an Employee to Review</option>
+                    <option *ngFor="let proj of projects" value="{{proj.$key}}">{{proj.projectName}}</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="id" class="col-xs-2 control-label">Reviewer:</label>
+            <div class="col-xs-4">
+                <select id="reviewerId" [(ngModel)]="rev==null?reviewerId:rev.reviewerId" required class="form-control" name="reviewerId">
+                    <option value="x" selected>Enter Reviewers Name</option>
+                    <option *ngFor="let emp of emps" value="{{emp.$key}}">{{emp.empName}}</option>
+                </select>
+            </div>
+            <label for="id" class="col-xs-2 control-label">Project Manager:</label>
+            <div class="col-xs-4">
+                <span class="inline-block">{{getItemByKey(getItemByKey(rev.projectId, projects, "pmId"), emps, "empName")}}</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="id" class="col-xs-2 control-label">Role:</label>
+            <div class="col-xs-10">
+                <textarea cols="5" id="projectRole" class="form-control" placeholder="Role" name="projectRole" [(ngModel)]="rev==null?projectRole:rev.projectRole"
+                    required></textarea>
+            </div>
+        </div>
+
+        <legend class="righter">Criteria</legend>
+        <div class="form-group">
+            <div class="col-xs-10">
+                <input type="text" [(ngModel)]="rev==null?criteria[0].COMM:rev.criteria[0].COMM" name="COMM" id="COMM" style="display:none;">
+                <criteria [criteria]="rev.criteria[0].COMM" [critName]="critComm" [critTitle]="critCOMMTitle" [rev]="rev" (changeCrit)="onCritChange($event)"
+                    [RATINGS]="critRating"></criteria>
+
+                <label for="id" class="col-xs-2 control-label">Comments:</label>
+                <div class="col-xs-10">
+                    <textarea cols="5" id="commComments" class="form-control" placeholder="Comments" name="commComments" [(ngModel)]="rev==null?criteriaComments[0].COMMCom:rev.criteriaComments[0].COMMCom"></textarea>
+                </div>
+
+                <input type="text" [(ngModel)]="rev==null?criteria[0].TW:rev.criteria[0].TW" name="TW" id="TW" style="display:none;">
+                <criteria [criteria]="rev.criteria[0].TW" [critName]="critTW" [critTitle]="critTWTitle" [rev]="rev" (changeCrit)="onCritChange($event)"
+                    [RATINGS]="critRating"></criteria>
+
+                  <label for="id" class="col-xs-2 control-label">Comments:</label>
+                <div class="col-xs-10">
+                    <textarea cols="5" id="twComments" class="form-control" placeholder="Comments" name="twComments" [(ngModel)]="rev==null?criteriaComments[0].MITeam:rev.criteriaComments[0].MITeam"></textarea>
+                </div>   
+
+                <input type="text" [(ngModel)]="rev==null?criteria[0].TW:rev.criteria[0].MI" name="MI" id="MI" style="display:none;">
+                <criteria [criteria]="rev.criteria[0].MI" [critName]="critMI" [critTitle]="critMITitle" [rev]="rev" (changeCrit)="onCritChange($event)"
+                    [RATINGS]="critRating"></criteria>
+
+                   <label for="id" class="col-xs-2 control-label">Comments:</label>
+                <div class="col-xs-10">
+                    <textarea cols="5" id="miComments" class="form-control" placeholder="Comments" name="miComments" [(ngModel)]="rev==null?criteriaComments[0].MICom:rev.criteriaComments[0].MICom"></textarea>
+                </div>    
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-xs-4">
+                <button class="btn btn-primary" type="submit" *ngIf="revState=='edit'">Update Review</button>
+                <button class="btn btn-primary" type="submit" *ngIf="revState=='new'">Add Review</button>
+                <button class="btn btn-primary" (click)="changeRevState('view')">Cancel</button>
+            </div>
+        </div>
+    </form>
+</div>

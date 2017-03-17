@@ -1,0 +1,50 @@
+<!--component html goes here -->
+<div *ngIf="empState=='view'">
+    <h2 class="sub-header">Employees</h2><button class="btn btn-primary" (click)="changeEmpState('new')">Add Employee</button>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Position</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let emp of emps">
+                    <td>{{emp.$key}}</td>
+                    <td>{{emp.empName}}</td>
+                    <td>{{emp.position}}</td>
+                    <td><span class="glyphicon glyphicon-edit" title="Create Review"></span></td>
+                    <td><span class="glyphicon glyphicon-pencil" title="Edit Employee" (click)="editEmployee(emp);"></span></td>
+
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div *ngIf="empState=='edit' || empState=='new'">
+    <form class="form-horizontal" role="form" #f="ngForm" (ngSubmit)="empState=='new'?addEmployee(f.form): updateEmployee(emp.$key, f.form);f.form.reset();">
+        <legend class="righter">New Employee</legend>
+        <div class="form-group">
+            <label for="title" class="col-xs-2 control-label">Employee Name:</label>
+            <div class="col-xs-4">
+                <input type="text" id="empName" class="form-control" placeholder="Employee Name" required name="empName" [(ngModel)]="emp==null?empName:emp.empName">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="id" class="col-xs-2 control-label">Position:</label>
+            <div class="col-xs-4">
+                <input type="text" id="position" class="form-control" placeholder="Position" name="position" [(ngModel)]="emp==null?position:emp.position" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-xs-4">
+                <button class="btn btn-primary" type="submit" *ngIf="empState=='edit'">Update Employee</button>
+                <button class="btn btn-primary" type="submit" *ngIf="empState=='new'">Add Employee</button>
+                <button class="btn btn-primary" (click)="changeEmpState('view');f.form.reset();">Cancel</button>
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,7 @@
+<!--component html goes here -->
+<div style="width:100%">
+    <h4>{{critTitle}}</h4>
+    <label class="col-xs-2 control-label">Rating:</label> {{critScore}}<br/>
+    <md-slider #slider id="slider" min="0" max="10" step="1" 
+    thumbLabel tickInterval="1" [value]="criteria" (change)="slideChange(critName, slider)"></md-slider>
+</div>
