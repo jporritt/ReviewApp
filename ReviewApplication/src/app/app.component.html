@@ -12,11 +12,11 @@
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav navbar-left">
-        <li><a class="navbar" href="#" (click)="empComp.changeEmpState('view');projComp.changeProjState('');">Employees</a></li>
-        <li><a class="navbar" href="#" (click)="empComp.changeEmpState('');projComp.changeProjState('view');">Projects</a></li>
-        <li><a class="navbar" href="#" (click)="empComp.changeEmpState('');revComp.changeRevState('view');">Reviews</a></li>
+        <li><a class="navbar" href="#" (click)="empComp.changeEmpState('view');projComp.changeProjState('');revComp.changeRevState('');">Employees</a></li>
+        <li><a class="navbar" href="#" (click)="empComp.changeEmpState('');projComp.changeProjState('view');revComp.changeRevState('');">Projects</a></li>
+        <li><a class="navbar" href="#" (click)="empComp.changeEmpState('');revComp.changeRevState('view');projComp.changeProjState('');">Reviews</a></li>
       </ul>
-      <ul class="nav navbar-nav navbar-right">
+      <!--<ul class="nav navbar-nav navbar-right">
         <li><a href="#">Dashboard</a></li>
         <li><a href="#">Settings</a></li>
         <li><a href="#">Profile</a></li>
@@ -24,7 +24,7 @@
       </ul>
       <form class="navbar-form navbar-right">
         <input type="text" class="form-control" placeholder="Search...">
-      </form>
+      </form>-->
     </div>
   </div>
 </nav>
@@ -33,5 +33,4 @@
   <employees #empComp  [emps]="employees"></employees>
   <projects #projComp [emps]="employees" [projects]="projects" ></projects>
   <reviews #revComp [emps]="employees" [projects]="projects"></reviews>
-  
 </div>
